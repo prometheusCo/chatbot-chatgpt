@@ -8,7 +8,7 @@ jQuery(document).ready(function ($) {
     var chatGptChatBot = $('#chatbot-chatgpt').hide();
 
     messageInput = $('#chatbot-chatgpt-message');
-    
+
     var conversation = $('#chatbot-chatgpt-conversation');
 
     submitButton = $('#chatbot-chatgpt-submit');
@@ -49,7 +49,7 @@ jQuery(document).ready(function ($) {
     //     var visible-distance = footerTop - headerBottom;
     //     console.log("Distance: " + distance + "px");
     // }
-    
+
     if (chatbot_chatgpt_display_style === 'embedded') {
         // Apply configurations for embedded style
         $('#chatbot-chatgpt').addClass('embedded-style').removeClass('floating-style');
@@ -70,7 +70,7 @@ jQuery(document).ready(function ($) {
             chatGptChatBot.removeClass('wide');
         }
     }
-    
+
     // Initially hide the chatbot
     if (chatgptStartStatus === 'closed') {
         // chatGptChatBot = document.querySelector('#chatbot-chatgpt');
@@ -85,22 +85,25 @@ jQuery(document).ready(function ($) {
                 $('#chatbot-chatgpt').css({
                     width: '500px', // or your desired width
                     height: '450px', // or your desired height
-                    overflow: 'visible'});
-                } else {
+                    overflow: 'visible'
+                });
+            } else {
                 $('#chatbot-chatgpt').css({
                     width: '300px', // or your desired width
                     height: '450px', // or your desired height
-                    overflow: 'visible'});
-                }
-                chatGptChatBot.show();
-                chatGptOpenButton.hide();
-            } else {
-                $('#chatbot-chatgpt').css({
-                    width: '100%', // or your desired width
-                    // height: '450px', // or your desired height
-                    height: '100%',
-                    overflow: 'visible'});
+                    overflow: 'visible'
+                });
             }
+            chatGptChatBot.show();
+            chatGptOpenButton.hide();
+        } else {
+            $('#chatbot-chatgpt').css({
+                width: '100%', // or your desired width
+                // height: '450px', // or your desired height
+                height: '100%',
+                overflow: 'visible'
+            });
+        }
     }
 
     chatbotContainer = $('<div></div>').addClass('chatbot-container');
@@ -109,21 +112,21 @@ jQuery(document).ready(function ($) {
 
     // Avatar and Custom Message - Ver 1.5.0
     selectedAvatar = localStorage.getItem('chatgpt_avatar_icon_setting');
-    
+
     if (selectedAvatar && selectedAvatar !== 'icon-000.png') {
         // Construct the path to the avatar
         avatarPath = pluginUrl + '/assets/icons/' + selectedAvatar;
-        
+
         // If an avatar is selected and it's not 'icon-000.png', use the avatar
         avatarImg = $('<img>').attr('id', 'chatgpt_avatar_icon_setting').attr('class', 'chatbot-avatar').attr('src', avatarPath);
-    
+
         // Get the stored greeting message. If it's not set, default to a custom value.
         avatarGreeting = localStorage.getItem('chatgpt_avatar_greeting_setting') || 'Howdy!!! Great to see you today! How can I help you?';
 
         // Revised to address cross-site scripting - Ver 1.6.4
         // // Create a bubble with the greeting message
         // var bubble = $('<div>').text(avatarGreeting).addClass('chatbot-bubble');
-    
+
         // // Append the avatar and the bubble to the button and apply the class for the avatar icon
         // chatGptOpenButton.empty().append(avatarImg, bubble).addClass('avatar-icon');
 
@@ -145,7 +148,7 @@ jQuery(document).ready(function ($) {
         // Remove the avatar-icon class (if it was previously added) and add the dashicon class
         chatGptOpenButton.empty().removeClass('avatar-icon').addClass('dashicons dashicons-format-chat dashicon');
     }
-    
+
     // Append the collapse button and collapsed chatbot icon to the chatbot container
     $('#chatbot-chatgpt-header').append(chatbotCollapseBtn);
     chatbotContainer.append(chatbotCollapsed);
@@ -182,7 +185,7 @@ jQuery(document).ready(function ($) {
             appendMessage(initialGreeting, 'bot', 'initial-greeting');
             localStorage.setItem('chatgptChatbotOpened', 'true');
             // Save the conversation after the initial greeting is appended - Ver 1.2.0
-            sessionStorage.setItem('chatgpt_conversation', conversation.html());           
+            sessionStorage.setItem('chatgpt_conversation', conversation.html());
 
         } else {
             // DIAG - Logging for Diagnostics - Ver 1.4.2
@@ -273,7 +276,7 @@ jQuery(document).ready(function ($) {
         dot1 = $('<span>.</span>').addClass('typing-dot');
         dot2 = $('<span>.</span>').addClass('typing-dot');
         dot3 = $('<span>.</span>').addClass('typing-dot');
-        
+
         typingIndicator.append(dot1, dot2, dot3);
         conversation.append(typingIndicator);
         conversation.scrollTop(conversation[0].scrollHeight);
@@ -289,7 +292,7 @@ jQuery(document).ready(function ($) {
         if (!message) {
             return;
         }
-            
+
         messageInput.val('');
         appendMessage(message, 'user');
 
@@ -375,6 +378,15 @@ jQuery(document).ready(function ($) {
                 submitButton.prop('disabled', false);
             },
         });
+
+
+        //Simple fix to regain right chat windows position when msg are sent in mobile version
+        //Otherwise the chat div won be visible after a sent
+        setTimeout(() => {
+            const element = document.getElementById('chatbot-chatgpt-message');
+            element.scrollIntoView({ behavior: 'smooth' });
+        }, 1000);
+
     });
 
     messageInput.on('keydown', function (e) {
@@ -407,19 +419,22 @@ jQuery(document).ready(function ($) {
                     $('#chatbot-chatgpt').css({
                         width: '500px', // or your desired width
                         height: '450px', // or your desired height
-                        overflow: 'visible'});
-                    } else {
+                        overflow: 'visible'
+                    });
+                } else {
                     $('#chatbot-chatgpt').css({
                         width: '300px', // or your desired width
                         height: '450px', // or your desired height
-                        overflow: 'visible'});
-                    }
-                } else {
-                    $('#chatbot-chatgpt').css({
-                        width: '100%', // or your desired width
-                        // height: '450px', // or your desired height
-                        overflow: 'visible'});
+                        overflow: 'visible'
+                    });
                 }
+            } else {
+                $('#chatbot-chatgpt').css({
+                    width: '100%', // or your desired width
+                    // height: '450px', // or your desired height
+                    overflow: 'visible'
+                });
+            }
             chatGptChatBot.show();
             chatGptOpenButton.hide();
             localStorage.setItem('chatgptStartStatus', 'open');
@@ -467,7 +482,7 @@ jQuery(document).ready(function ($) {
         // if (chatbotSettings.chatbot_chatgpt_diagnostics === 'On') {
         //     console.log('FUNCTION: loadChatbotStatus - AFTER DECISION');
         // }
-        
+
         // If the chatbot status is not set in local storage, use chatgptStartStatus - Ver 1.5.1
         if (chatgptStartStatus === 'closed') {
             chatGptChatBot.hide();
@@ -493,12 +508,12 @@ jQuery(document).ready(function ($) {
         }, 100);  // delay of 100 milliseconds  
 
     }
-   
+
     // Load conversation from local storage if available - Ver 1.2.0
     function loadConversation() {
         storedConversation = sessionStorage.getItem('chatgpt_conversation');
         localStorage.setItem('chatgptStartStatusNewVisitor', 'closed');
-  
+
         // DIAG - Diagnostics - Ver 1.5.0
         // if (chatbotSettings.chatbot_chatgpt_diagnostics === 'On') {
         //     console.log('FUNCTION: loadConversation');
@@ -528,7 +543,7 @@ jQuery(document).ready(function ($) {
     }
 
     // Call the loadChatbotStatus function here - Ver 1.1.0
-    loadChatbotStatus(); 
+    loadChatbotStatus();
 
     // Load the conversation when the chatbot is shown on page load - Ver 1.2.0
     // Let the convesation stay persistent in session storage for increased privacy - Ver 1.4.2
